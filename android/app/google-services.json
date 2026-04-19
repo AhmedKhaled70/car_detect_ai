@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "824283794438",
+    "project_id": "car-damage-detection-f258a",
+    "storage_bucket": "car-damage-detection-f258a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824283794438:android:ed75ce5e54546874fe0787",
+        "android_client_info": {
+          "package_name": "com.example.car_damage_detection"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824283794438-bou6uk50clj9uvn2c51i5548ije2u6av.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDmgQqBOy0ZhSlpoKUrUy6NaCQRGRTpL8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824283794438-bou6uk50clj9uvn2c51i5548ije2u6av.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "824283794438-d6cboh3dan38nrqfaa0l3bgvdlghdm00.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carDamageDetection"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
