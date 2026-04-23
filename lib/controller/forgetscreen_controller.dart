@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../api config.dart';
+
 class ForgotPasswordController extends ChangeNotifier {
 
   final emailController = TextEditingController();
@@ -9,7 +11,7 @@ class ForgotPasswordController extends ChangeNotifier {
   bool isLoading = false;
   String? emailError;
 
-  final String baseUrl = "http://10.0.2.2:5161/api/Authentication";//
+  final String baseUrl = "${ApiConfig.baseUrl}/Authentication";
 
   bool validate() {
     emailError = null;

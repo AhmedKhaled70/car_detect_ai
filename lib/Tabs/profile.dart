@@ -1,10 +1,11 @@
+import 'dart:io';
 import 'package:car_damage_detection/loginscreen.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controller/user_controler.dart';
 import 'feature screen.dart';
-
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -19,6 +20,9 @@ class _ProfileTabState extends State<ProfileTab> {
 
   Map<String, dynamic>? user;
   bool isLoading = true;
+
+  File? selectedImage;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -37,13 +41,11 @@ class _ProfileTabState extends State<ProfileTab> {
 
     } catch (e) {
       print("ERROR: $e");
-
       setState(() {
         isLoading = false;
       });
     }
   }
-
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove("token");
@@ -59,15 +61,37 @@ class _ProfileTabState extends State<ProfileTab> {
   Widget build(BuildContext context) {
 
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
     if (user == null) {
-      return const Center(child: Text("❌ Failed to load user"));
+      return const Scaffold(
+        body: Center(child: Text("❌ Failed to load user")),
+      );
     }
+    final imageUrl = user!['profileImage'];
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
+
+      /// 🔥 AppBar بسهم رجوع
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF3B6DE3),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context); // 🔥 رجوع للهوم
+          },
+        ),
+        centerTitle: true,
+        title: const Text(
+          "Profile",
+          style: TextStyle(color: Colors.white,fontSize:30),
+        ),
+      ),
 
       body: SingleChildScrollView(
         child: Column(
@@ -75,7 +99,7 @@ class _ProfileTabState extends State<ProfileTab> {
 
             /// 🔥 Header
             Container(
-              padding: const EdgeInsets.only(top: 60, bottom: 30),
+              padding: const EdgeInsets.only(top: 30, bottom: 30),
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Color(0xFF3B6DE3),
@@ -86,11 +110,23 @@ class _ProfileTabState extends State<ProfileTab> {
               child: Column(
                 children: [
 
-                  /// Avatar
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.person, size: 50, color: Color(0xFF3B6DE3)),
+                  /// 🔥 Avatar (Editable)
+                  GestureDetector(
+
+                    child: CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.white,
+                      backgroundImage: selectedImage != null
+                          ? FileImage(selectedImage!) as ImageProvider
+                          : (imageUrl != null && imageUrl.toString().isNotEmpty
+                          ? NetworkImage(imageUrl)
+                          : null),
+                      child: (selectedImage == null &&
+                          (imageUrl == null || imageUrl.toString().isEmpty))
+                          ? const Icon(Icons.person,
+                          size: 50, color: Color(0xFF3B6DE3))
+                          : null,
+                    ),
                   ),
 
                   const SizedBox(height: 10),
@@ -118,7 +154,7 @@ class _ProfileTabState extends State<ProfileTab> {
 
             const SizedBox(height: 20),
 
-            /// 🔥 Info Cards
+            /// 🔥 Info
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -127,59 +163,60 @@ class _ProfileTabState extends State<ProfileTab> {
                   _buildCard(
                     icon: Icons.person,
                     title: "Full Name",
-                    value: user!['name'],
+                    value: user!['name'] ?? "",
                   ),
 
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 20),
 
                   _buildCard(
                     icon: Icons.email,
                     title: "Email",
-                    value: user!['email'],
+                    value: user!['email'] ?? "",
                   ),
 
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 200),
 
-                  _buildCard(
-                    icon: Icons.verified,
-                    title: "Status",
-                    value: user!['status'] ?? "Active",
-                  ),
-
-                  const SizedBox(height: 25),
+                  /// About
                   SizedBox(
                     width: double.infinity,
                     height: 55,
-                    child: ElevatedButton.icon(
-                      onPressed:() {
+                    child: ElevatedButton(
+                      onPressed: () {
                         Navigator.pushReplacementNamed(
                           context,
                           FeaturesScreen.RouteName,
                         );
                       },
-                      label: const Text("about",style: TextStyle(color: Colors.white),),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF3B6DE3),
+                        backgroundColor: const Color(0xFF3B6DE3),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
+                      child: const Text(
+                        "About",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
+
                   const SizedBox(height: 20),
-                  /// 🔥 Logout
+
+                  /// Logout
                   SizedBox(
                     width: double.infinity,
                     height: 55,
-                    child: ElevatedButton.icon(
+                    child: ElevatedButton(
                       onPressed: logout,
-                      icon: const Icon(Icons.logout,color:Colors.red ,),
-                      label: const Text("Logout",style: TextStyle(color: Colors.red),),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
+                      ),
+                      child: const Text(
+                        "Logout",
+                        style: TextStyle(color: Colors.red),
                       ),
                     ),
                   ),

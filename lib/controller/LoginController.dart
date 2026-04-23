@@ -3,26 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../api config.dart';
+
 class LoginController extends ChangeNotifier {
-  // 🔹 Controllers
+
+  /// 🔹 Controllers
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  // 🔹 States
+  /// 🔹 States
   bool isLoading = false;
   bool isPasswordHidden = true;
 
   String? emailError;
   String? passwordError;
 
+  final String baseUrl = "${ApiConfig.baseUrl}/Authentication";
 
-  final String baseUrl = "http://10.0.2.2:5161/api/Authentication";//🔹 Toggle Password Visibility
+  /// 🔹 Toggle Password
   void togglePassword() {
     isPasswordHidden = !isPasswordHidden;
     notifyListeners();
   }
 
-  // 🔹 Validation
+  /// 🔹 Validation
   bool validate() {
     emailError = null;
     passwordError = null;
@@ -40,7 +44,7 @@ class LoginController extends ChangeNotifier {
     return emailError == null && passwordError == null;
   }
 
-  // 🔐 Login
+  /// 🔐 Login
   Future<bool> loginUser() async {
     if (!validate()) return false;
 
@@ -50,39 +54,53 @@ class LoginController extends ChangeNotifier {
 
       print("🚀 START LOGIN");
 
-      final response = await http
-          .post(
+      final response = await http.post(
         Uri.parse("$baseUrl/Login"),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": emailController.text.trim(),
           "password": passwordController.text.trim(),
         }),
-      )
-          .timeout(const Duration(seconds: 10));
+      );
 
-      print("✅ RESPONSE RECEIVED");
       print("STATUS: ${response.statusCode}");
       print("BODY: ${response.body}");
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+      final data = jsonDecode(response.body);
 
-        String token = data['token'];
-
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString("token", token);
-
-        print("🔥 TOKEN: $token");
-
-        return true;
-      } else {
-        final error = jsonDecode(response.body);
-        print("❌ ERROR: ${error['error']}");
+      /// 🔥 Handle API error (حتى لو status 200)
+      if (data["StatusCode"] != null && data["StatusCode"] != 200) {
+        print("❌ LOGIN ERROR: ${data["ErrorMessage"]}");
         return false;
       }
+
+      /// 🔥 Token
+      final token = data['token'];
+
+      if (token == null || token.toString().isEmpty) {
+        print("❌ No token received");
+        return false;
+      }
+
+      final prefs = await SharedPreferences.getInstance();
+
+      /// 🔥 Save token
+      await prefs.setString("token", token);
+
+      /// 🔥 Save profile image (من غير ما تمسح القديمة)
+      if (data["profileImage"] != null &&
+          data["profileImage"].toString().isNotEmpty) {
+
+        await prefs.setString("profileImage", data["profileImage"]);
+        print("🖼 SAVED IMAGE: ${data["profileImage"]}");
+      } else {
+        print("⚠️ No image returned from login, keeping old one");
+      }
+
+      print("🔥 TOKEN SAVED");
+
+      return true;
+
     } catch (e) {
       print("❌ EXCEPTION: $e");
       return false;
@@ -92,14 +110,12 @@ class LoginController extends ChangeNotifier {
     }
   }
 
-  // 🔐 Forgot Password
+  /// 🔐 Forgot Password
   Future<String?> resetPassword() async {
     try {
       final response = await http.post(
         Uri.parse("$baseUrl/ForgotPassword"),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": emailController.text.trim(),
         }),
@@ -112,9 +128,13 @@ class LoginController extends ChangeNotifier {
     }
   }
 
-  // 🔓 Logout
+  /// 🔓 Logout
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
+
     await prefs.remove("token");
+
+    /// ❗ مهم: امسح الصورة كمان لو عايز reset كامل
+    await prefs.remove("profileImage");
   }
 }
