@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../api config.dart';
+
 class ResetPasswordController extends ChangeNotifier {
 
   final passwordController = TextEditingController();
@@ -11,7 +13,7 @@ class ResetPasswordController extends ChangeNotifier {
   String? confirmError;
   bool isLoading = false;
 
-  final String baseUrl = "http://10.0.2.2:5161/api/Authentication";//
+  final String baseUrl = "${ApiConfig.baseUrl}/Authentication";
   Future<bool> resetPassword({
     required String email,
     required String token,
