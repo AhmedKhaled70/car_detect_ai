@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'controller/ResetPassword_controller.dart';
 
-
 class ResetPasswordScreen extends StatelessWidget {
   final String email;
   final String token;
@@ -23,21 +22,16 @@ class ResetPasswordScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-
             TextField(
               controller: controller.passwordController,
-              decoration: const InputDecoration(
-                labelText: "New Password",
-              ),
+              decoration: const InputDecoration(labelText: "New Password"),
             ),
 
             const SizedBox(height: 20),
 
             TextField(
               controller: controller.confirmPasswordController,
-              decoration: const InputDecoration(
-                labelText: "Confirm Password",
-              ),
+              decoration: const InputDecoration(labelText: "Confirm Password"),
             ),
 
             const SizedBox(height: 30),
@@ -54,7 +48,7 @@ class ResetPasswordScreen extends StatelessWidget {
                 }
               },
               child: const Text("Reset"),
-            )
+            ),
           ],
         ),
       ),

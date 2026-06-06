@@ -5,9 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../api config.dart';
 
 class UserController {
-
   final String baseUrl = "${ApiConfig.baseUrl}/Authentication";
-
 
   Future<bool> uploadImage(String path) async {
     try {
@@ -21,21 +19,19 @@ class UserController {
 
       request.headers['Authorization'] = "Bearer $token";
 
-      request.files.add(
-        await http.MultipartFile.fromPath('image', path),
-      );
+      request.files.add(await http.MultipartFile.fromPath('image', path));
 
       var response = await request.send();
 
       print("STATUS: ${response.statusCode}");
 
       return response.statusCode == 200;
-
     } catch (e) {
       print("❌ ERROR: $e");
       return false;
     }
   }
+
   Future<Map<String, dynamic>?> getCurrentUser() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -50,9 +46,7 @@ class UserController {
 
       final response = await http.get(
         Uri.parse("$baseUrl/GetCurrentUser"),
-        headers: {
-          "Authorization": "Bearer $token",
-        },
+        headers: {"Authorization": "Bearer $token"},
       );
 
       print("STATUS: ${response.statusCode}");
@@ -63,7 +57,6 @@ class UserController {
       }
 
       return null;
-
     } catch (e) {
       print("❌ ERROR: $e");
       return null;

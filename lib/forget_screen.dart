@@ -20,7 +20,6 @@ class ForgotPasswordScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 const SizedBox(height: 30),
 
                 /// 🔙 Back Button
@@ -53,10 +52,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 const Center(
                   child: Text(
                     "Forgot Password?",
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                   ),
                 ),
 
@@ -67,10 +63,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   child: Text(
                     "Enter your email to receive a reset link",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
                   ),
                 ),
 
@@ -86,8 +79,10 @@ class ForgotPasswordScreen extends StatelessWidget {
                     prefixIcon: const Icon(Icons.email_outlined),
                     filled: true,
                     fillColor: Colors.white,
-                    contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 18,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide.none,
@@ -101,47 +96,47 @@ class ForgotPasswordScreen extends StatelessWidget {
                 controller.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : SizedBox(
-                  width: double.infinity,
-                  height: 55,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final message = await controller.sendReset();
+                        width: double.infinity,
+                        height: 55,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final message = await controller.sendReset();
 
-                      if (message != null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(message),
-                            backgroundColor: Colors.green,
-                            behavior: SnackBarBehavior.floating,
+                            if (message != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(message),
+                                  backgroundColor: Colors.green,
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              );
+
+                              /// يرجع لصفحة اللوجين بعد ثانية
+                              Future.delayed(const Duration(seconds: 2), () {
+                                Navigator.pop(context);
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF5B6CFF),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: const Text(
+                            "Send Reset Link",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        );
-
-                        /// يرجع لصفحة اللوجين بعد ثانية
-                        Future.delayed(const Duration(seconds: 2), () {
-                          Navigator.pop(context);
-                        });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF5B6CFF),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
+                        ),
                       ),
-                      elevation: 0,
-                    ),
-                    child: const Text(
-                      "Send Reset Link",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
 
                 const SizedBox(height: 40),
 

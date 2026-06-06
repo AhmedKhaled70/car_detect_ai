@@ -25,7 +25,6 @@ class _RegisterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final controller = context.watch<RegisterController>();
 
     return Scaffold(
@@ -34,7 +33,6 @@ class _RegisterView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-
               const SizedBox(height: 50),
 
               /// 🔥 اختيار صورة
@@ -46,7 +44,6 @@ class _RegisterView extends StatelessWidget {
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-
                           ListTile(
                             leading: const Icon(Icons.camera_alt),
                             title: const Text("Camera"),
@@ -64,7 +61,6 @@ class _RegisterView extends StatelessWidget {
                               Navigator.pop(context);
                             },
                           ),
-
                         ],
                       );
                     },
@@ -87,10 +83,7 @@ class _RegisterView extends StatelessWidget {
 
               const Text(
                 'Car Detect AI',
-                style: TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
 
               const Text(
@@ -159,34 +152,35 @@ class _RegisterView extends StatelessWidget {
                   onPressed: controller.isLoading
                       ? null
                       : () async {
+                          /// 🔥 شرط الصورة
+                          if (controller.selectedImage == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "⚠️ Please select a profile image",
+                                ),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                            return;
+                          }
 
-                    /// 🔥 شرط الصورة
-                    if (controller.selectedImage == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("⚠️ Please select a profile image"),
-                          backgroundColor: Colors.orange,
-                        ),
-                      );
-                      return;
-                    }
+                          bool success = await controller.registerUser();
 
-                    bool success = await controller.registerUser();
-
-                    if (success) {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        homescreen.RouteName,
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("❌ Registration failed"),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
+                          if (success) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              homescreen.RouteName,
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("❌ Registration failed"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF5B6CFF),
                     shape: RoundedRectangleBorder(
@@ -196,12 +190,9 @@ class _RegisterView extends StatelessWidget {
                   child: controller.isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
-                    "Create Account",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
+                          "Create Account",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
                 ),
               ),
 
@@ -256,11 +247,9 @@ Widget _buildTextField({
       errorText: errorText,
       suffixIcon: isPassword
           ? IconButton(
-        icon: Icon(
-          isHidden ? Icons.visibility_off : Icons.visibility,
-        ),
-        onPressed: onToggle,
-      )
+              icon: Icon(isHidden ? Icons.visibility_off : Icons.visibility),
+              onPressed: onToggle,
+            )
           : null,
       filled: true,
       fillColor: Colors.grey.shade50,

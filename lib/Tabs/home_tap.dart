@@ -3,7 +3,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../car_details.dart';
 
-
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
 
@@ -28,7 +27,6 @@ class _HomeTabState extends State<HomeTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               const SizedBox(height: 20),
 
               /// 🔥 Car Preview Card
@@ -51,7 +49,6 @@ class _HomeTabState extends State<HomeTab> {
                 ),
                 child: Stack(
                   children: [
-
                     /// Gradient overlay
                     Container(
                       decoration: BoxDecoration(
@@ -111,10 +108,7 @@ class _HomeTabState extends State<HomeTab> {
               /// Title
               const Text(
                 "Identify Any Vehicle",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 8),
@@ -131,19 +125,14 @@ class _HomeTabState extends State<HomeTab> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => const CarDetailsScreen(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const CarDetailsScreen()),
                   );
                 },
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFF4A80F0),
-                        Color(0xFF3B6DE3),
-                      ],
+                      colors: [Color(0xFF4A80F0), Color(0xFF3B6DE3)],
                     ),
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
@@ -159,14 +148,12 @@ class _HomeTabState extends State<HomeTab> {
                       CircleAvatar(
                         radius: 26,
                         backgroundColor: Colors.white24,
-                        child: Icon(Icons.camera_alt,
-                            color: Colors.white),
+                        child: Icon(Icons.camera_alt, color: Colors.white),
                       ),
                       SizedBox(width: 20),
                       Expanded(
                         child: Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "Start New Scan",
@@ -179,15 +166,12 @@ class _HomeTabState extends State<HomeTab> {
                             SizedBox(height: 4),
                             Text(
                               "AI-powered damage assessment",
-                              style: TextStyle(
-                                color: Colors.white70,
-                              ),
+                              style: TextStyle(color: Colors.white70),
                             ),
                           ],
                         ),
                       ),
-                      Icon(Icons.arrow_forward_ios,
-                          color: Colors.white70)
+                      Icon(Icons.arrow_forward_ios, color: Colors.white70),
                     ],
                   ),
                 ),
@@ -201,10 +185,7 @@ class _HomeTabState extends State<HomeTab> {
               /// 🚨 Emergency Section
               const Text(
                 "Emergency Help",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 12),
@@ -224,7 +205,6 @@ class _HomeTabState extends State<HomeTab> {
                   ),
                   child: Row(
                     children: [
-
                       /// 🔥 Icon
                       Container(
                         padding: const EdgeInsets.all(12),

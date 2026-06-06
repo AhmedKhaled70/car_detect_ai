@@ -3,8 +3,10 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:car_damage_detection/loginscreen.dart';
 import 'package:car_damage_detection/register_screen.dart';
 import 'package:car_damage_detection/resetpassword_screen.dart';
+import 'package:car_damage_detection/services/custom_observer_bloc.dart';
 import 'package:car_damage_detection/splash_sceen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:app_links/app_links.dart';
@@ -14,6 +16,7 @@ import 'controller/ResetPassword_controller.dart';
 import 'home_screen.dart';
 
 void main() {
+  Bloc.observer = CustomObserverBloc();
   runApp(const MyApp());
 }
 
@@ -25,7 +28,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   Widget? startScreen;
 
   late AppLinks _appLinks;
@@ -48,7 +50,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initApp() async {
-
     /// 🔥 get link if app opened from it
     final uri = await _appLinks.getInitialLink();
 
@@ -80,10 +81,7 @@ class _MyAppState extends State<MyApp> {
         MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
             create: (_) => ResetPasswordController(),
-            child: ResetPasswordScreen(
-              email: email,
-              token: token,
-            ),
+            child: ResetPasswordScreen(email: email, token: token),
           ),
         ),
       );
@@ -98,12 +96,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     if (startScreen == null) {
       return const MaterialApp(
-        home: Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        ),
+        home: Scaffold(body: Center(child: CircularProgressIndicator())),
       );
     }
 

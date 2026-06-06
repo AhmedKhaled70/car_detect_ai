@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import '../api config.dart';
 
 class ForgotPasswordController extends ChangeNotifier {
-
   final emailController = TextEditingController();
 
   bool isLoading = false;
@@ -34,12 +33,8 @@ class ForgotPasswordController extends ChangeNotifier {
 
       final response = await http.post(
         Uri.parse("$baseUrl/ForgotPassword"),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonEncode({
-          "email": emailController.text.trim(),
-        }),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": emailController.text.trim()}),
       );
 
       print("STATUS: ${response.statusCode}");
@@ -48,7 +43,6 @@ class ForgotPasswordController extends ChangeNotifier {
       final data = jsonDecode(response.body);
 
       return data['message'] ?? "Check your email";
-
     } catch (e) {
       return "Something went wrong";
     } finally {

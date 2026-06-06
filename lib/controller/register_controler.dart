@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterController extends ChangeNotifier {
-
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -56,7 +55,8 @@ class RegisterController extends ChangeNotifier {
     if (emailController.text.isEmpty) emailError = "Required";
     if (phoneController.text.isEmpty) phoneError = "Required";
     if (passwordController.text.isEmpty) passwordError = "Required";
-    if (confirmPasswordController.text.isEmpty) confirmPasswordError = "Required";
+    if (confirmPasswordController.text.isEmpty)
+      confirmPasswordError = "Required";
 
     if (passwordController.text != confirmPasswordController.text) {
       confirmPasswordError = "Passwords don't match";
@@ -79,27 +79,20 @@ class RegisterController extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      final uri = Uri.http(
-        baseUrl,
-        "/api/Authentication/Register",
-        {
-          "Email": emailController.text.trim(),
-          "Password": passwordController.text.trim(),
-          "UserName": nameController.text.trim(),
-          "Name": nameController.text.trim(),
-          "PhoneNumber": phoneController.text.trim(),
-        },
-      );
+      final uri = Uri.http(baseUrl, "/api/Authentication/Register", {
+        "Email": emailController.text.trim(),
+        "Password": passwordController.text.trim(),
+        "UserName": nameController.text.trim(),
+        "Name": nameController.text.trim(),
+        "PhoneNumber": phoneController.text.trim(),
+      });
 
       final request = http.MultipartRequest('POST', uri);
 
       /// 🔥 لو فيه صورة
       if (selectedImage != null) {
         request.files.add(
-          await http.MultipartFile.fromPath(
-            'Image',
-            selectedImage!.path,
-          ),
+          await http.MultipartFile.fromPath('Image', selectedImage!.path),
         );
       }
 
@@ -160,7 +153,6 @@ class RegisterController extends ChangeNotifier {
       return true;
 
       return false;
-
     } catch (e) {
       print("❌ ERROR: $e");
       return false;
