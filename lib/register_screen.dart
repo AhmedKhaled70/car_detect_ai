@@ -3,6 +3,8 @@ import 'package:car_damage_detection/loginscreen.dart';
 import 'package:car_damage_detection/controller/register_controler.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class register_screen extends StatelessWidget {
   static const String RouteName = 'register_screen';
@@ -35,15 +37,49 @@ class _RegisterView extends StatelessWidget {
 
               const SizedBox(height: 50),
 
-              Container(
-                height: 180,
-                width: 180,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/car_icon1.jpg'),
-                    fit: BoxFit.cover,
-                  ),
+              /// 🔥 اختيار صورة
+              GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (_) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+
+                          ListTile(
+                            leading: const Icon(Icons.camera_alt),
+                            title: const Text("Camera"),
+                            onTap: () {
+                              controller.pickImage(ImageSource.camera);
+                              Navigator.pop(context);
+                            },
+                          ),
+
+                          ListTile(
+                            leading: const Icon(Icons.photo),
+                            title: const Text("Gallery"),
+                            onTap: () {
+                              controller.pickImage(ImageSource.gallery);
+                              Navigator.pop(context);
+                            },
+                          ),
+
+                        ],
+                      );
+                    },
+                  );
+                },
+
+                child: CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.grey.shade200,
+                  backgroundImage: controller.selectedImage != null
+                      ? FileImage(controller.selectedImage!)
+                      : null,
+                  child: controller.selectedImage == null
+                      ? const Icon(Icons.add_a_photo, size: 30)
+                      : null,
                 ),
               ),
 
@@ -79,13 +115,16 @@ class _RegisterView extends StatelessWidget {
                 controller: controller.emailController,
                 errorText: controller.emailError,
               ),
+
               const SizedBox(height: 16),
+
               _buildTextField(
                 hint: 'Phone Number',
                 icon: Icons.phone,
                 controller: controller.phoneController,
                 errorText: controller.phoneError,
               ),
+
               const SizedBox(height: 16),
 
               _buildTextField(
@@ -112,6 +151,7 @@ class _RegisterView extends StatelessWidget {
 
               const SizedBox(height: 25),
 
+              /// 🔥 زرار التسجيل
               SizedBox(
                 width: double.infinity,
                 height: 55,
@@ -119,12 +159,32 @@ class _RegisterView extends StatelessWidget {
                   onPressed: controller.isLoading
                       ? null
                       : () async {
-                    bool success =
-                    await controller.registerUser();
+
+                    /// 🔥 شرط الصورة
+                    if (controller.selectedImage == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("⚠️ Please select a profile image"),
+                          backgroundColor: Colors.orange,
+                        ),
+                      );
+                      return;
+                    }
+
+                    bool success = await controller.registerUser();
 
                     if (success) {
                       Navigator.pushReplacementNamed(
-                          context, homescreen.RouteName);
+                        context,
+                        homescreen.RouteName,
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("❌ Registration failed"),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -134,8 +194,7 @@ class _RegisterView extends StatelessWidget {
                     ),
                   ),
                   child: controller.isLoading
-                      ? const CircularProgressIndicator(
-                      color: Colors.white)
+                      ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
                     "Create Account",
                     style: TextStyle(
@@ -198,9 +257,7 @@ Widget _buildTextField({
       suffixIcon: isPassword
           ? IconButton(
         icon: Icon(
-          isHidden
-              ? Icons.visibility_off
-              : Icons.visibility,
+          isHidden ? Icons.visibility_off : Icons.visibility,
         ),
         onPressed: onToggle,
       )

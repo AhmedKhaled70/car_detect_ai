@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../car_details.dart';
 
 
@@ -23,7 +24,7 @@ class _HomeTabState extends State<HomeTab> {
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F7FB),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -32,7 +33,7 @@ class _HomeTabState extends State<HomeTab> {
 
               /// 🔥 Car Preview Card
               Container(
-                height: 200,
+                height: 250,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
@@ -195,34 +196,81 @@ class _HomeTabState extends State<HomeTab> {
               const SizedBox(height: 18),
 
               /// 🔵 Upload Button
+              const SizedBox(height: 25),
+
+              /// 🚨 Emergency Section
+              const Text(
+                "Emergency Help",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
               GestureDetector(
-                onTap: _openGallery,
+                onTap: () async {
+                  final Uri phone = Uri.parse("tel:01221110000");
+                  await launchUrl(phone);
+                },
                 child: Container(
-                  padding: const EdgeInsets.all(18),
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: Colors.blue.shade100),
+                    color: Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.red.shade200),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.upload_file,
-                          color: Colors.blue),
-                      SizedBox(width: 10),
-                      Text(
-                        "Upload from Gallery",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w600,
+                    children: [
+
+                      /// 🔥 Icon
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                      )
+                        child: const Icon(
+                          Icons.warning,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+
+                      const SizedBox(width: 15),
+
+                      /// 🔥 Text
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              "Call now Truck",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              "01221110000",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      /// 🔥 Arrow
+                      const Icon(Icons.arrow_forward_ios, size: 16),
                     ],
                   ),
                 ),
               ),
-
-              const SizedBox(height: 35),
             ],
           ),
         ),

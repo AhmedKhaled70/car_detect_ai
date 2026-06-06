@@ -1,9 +1,10 @@
-import 'package:car_damage_detection/Tabs/History_tab.dart';
-import 'package:car_damage_detection/Tabs/centers_tab.dart';
-import 'package:car_damage_detection/Tabs/profile_tab.dart';
+import 'package:car_damage_detection/Tabs/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'History_tab.dart';
 import 'Tabs/home_tap.dart';
+import 'car_details.dart';
+import 'controller/user_controler.dart';
 
 class homescreen extends StatefulWidget {
   static const String RouteName = 'homescreen';
@@ -18,161 +19,120 @@ class _homescreenState extends State<homescreen> {
   int selectedIndex = 0;
   final ImagePicker _picker = ImagePicker();
 
+  List<Widget> tabs = [
+    const HomeTab(),
+    const HistoryTab(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF5F7FB),
+
+      /// 🔥 AppBar
       appBar: AppBar(
         backgroundColor: const Color(0xff0c77e1),
         elevation: 0,
-        centerTitle: true,
-
-        leading: const Padding(
-          padding: EdgeInsets.only(left: 10),
-          child: Icon(
-            Icons.car_crash_outlined,
-            color: Colors.white,
-            size: 28,
-          ),
-        ),
-
         title: const Text(
           "Car Detect AI",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
         ),
-      ),
-      /// 🔥 Body
-      body: tabs[selectedIndex],
 
-      /// 🔥 Floating Camera Button
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        height: 90,
-        width: 90,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
+        /// 🔥 Profile Image
+        actions: [
+          FutureBuilder(
+            future: UserController().getCurrentUser(),
+            builder: (context, snapshot) {
 
-          /// 🔥 Glow خارجي
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF3B6DE3).withOpacity(0.4),
-              blurRadius: 25,
-              spreadRadius: 5,
-            ),
-          ],
-        ),
+              if (!snapshot.hasData) {
+                return const Padding(
+                  padding: EdgeInsets.only(right: 12),
+                  child: CircleAvatar(child: Icon(Icons.person)),
+                );
+              }
 
-        child: Center(
-          child: Container(
-            height: 75,
-            width: 75,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white, // 🔥 outline أبيض
-            ),
+              final user = snapshot.data!;
+              final imageUrl = user["profileImage"];
 
-            child: Center(
-              child: FloatingActionButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-                    ),
-                    builder: (_) {
-                      return Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-
-                            Container(
-                              width: 40,
-                              height: 5,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            ListTile(
-                              leading: const CircleAvatar(
-                                backgroundColor: Color(0xffE3F2FD),
-                                child: Icon(Icons.camera_alt, color: Colors.blue),
-                              ),
-                              title: const Text("Open Camera"),
-                              onTap: () async {
-                                Navigator.pop(context);
-                                await _picker.pickImage(source: ImageSource.camera);
-                              },
-                            ),
-
-                            ListTile(
-                              leading: const CircleAvatar(
-                                backgroundColor: Color(0xffE8F5E9),
-                                child: Icon(Icons.photo, color: Colors.green),
-                              ),
-                              title: const Text("Choose from Gallery"),
-                              onTap: () async {
-                                Navigator.pop(context);
-                                await _picker.pickImage(source: ImageSource.gallery);
-                              },
-                            ),
-
-                            const SizedBox(height: 10),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-
-                /// 🔥 نخليها أصغر عشان تبان دائرية أكتر
-                heroTag: "cameraBtn",
-                backgroundColor: const Color(0xFF3B6DE3),
-                elevation: 0,
-
-                shape: const CircleBorder(),
-
-                child: const Icon(
-                  Icons.camera_alt,
-                  size: 28,
-                  color: Colors.white,
+              return Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ProfileTab(),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.grey.shade200,
+                    backgroundImage: (imageUrl != null && imageUrl.isNotEmpty)
+                        ? NetworkImage(imageUrl)
+                        : null,
+                    child: (imageUrl == null || imageUrl.isEmpty)
+                        ? const Icon(Icons.person)
+                        : null,
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
-        ),
+        ],
       ),
 
-      /// 🔥 Bottom Bar
+      /// 🔥 Animation Switch
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 400),
+        transitionBuilder: (child, animation) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.2, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          );
+        },
+        child: tabs[selectedIndex],
+      ),
+
+      /// 🔥 Floating Button في النص
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _buildFAB(),
+
+      /// 🔥 Bottom Navigation
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
-        notchMargin: 10,
+        notchMargin: 20,
         elevation: 10,
         color: Colors.white,
         child: SizedBox(
           height: 65,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
 
-              /// LEFT
-              _buildItem(Icons.home, "Home", 0),
-              _buildItem(Icons.history, "History", 1),
+              /// 🔥 الشمال
+              Padding(
+                padding: const EdgeInsets.only(left: 25),
+                child: _buildItem(Icons.home, "Home", 0),
+              ),
 
-              const SizedBox(width: 40), // space for FAB
+              /// 🔥 مساحة للـ FAB
+              const SizedBox(width: 80),
 
-              /// RIGHT
-              _buildItem(Icons.map, "Centers", 2),
-              _buildItem(Icons.person, "Profile", 3),
+              /// 🔥 اليمين
+              Padding(
+                padding: const EdgeInsets.only(right: 25),
+                child: _buildItem(Icons.history, "History", 1),
+              ),
             ],
           ),
         ),
@@ -180,7 +140,67 @@ class _homescreenState extends State<homescreen> {
     );
   }
 
-  /// 🔥 Item Builder
+  /// 🔥 FAB احترافي
+  Widget _buildFAB() {
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 1, end: 1.08),
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+      builder: (context, scale, child) {
+        return Transform.scale(
+          scale: scale,
+          child: Container(
+            height: 90,
+            width: 90,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF3B6DE3).withOpacity(0.4),
+                  blurRadius: 25,
+                  spreadRadius: 5,
+                ),
+              ],
+            ),
+            child: Center(
+              child: Container(
+                height: 75,
+                width: 75,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: Center(
+                  child: FloatingActionButton(
+                    heroTag: "cameraBtn",
+                    backgroundColor: const Color(0xFF3B6DE3),
+                    elevation: 0,
+                    shape: const CircleBorder(),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const CarDetailsScreen(),
+                        ),
+                      );
+                    },
+                    child: const Icon(
+                      Icons.camera_alt,
+                      size: 28,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+  /// 🔥 Bottom Item
   Widget _buildItem(IconData icon, String label, int index) {
     final isSelected = selectedIndex == index;
 
@@ -195,24 +215,17 @@ class _homescreenState extends State<homescreen> {
         children: [
           Icon(
             icon,
-            color: isSelected ? Color(0xFF3B6DE3) : Colors.grey,
+            color: isSelected ? const Color(0xFF3B6DE3) : Colors.grey,
           ),
           Text(
             label,
             style: TextStyle(
               fontSize: 12,
-              color: isSelected ? Color(0xFF3B6DE3) : Colors.grey,
+              color: isSelected ? const Color(0xFF3B6DE3) : Colors.grey,
             ),
           ),
         ],
       ),
     );
   }
-
-  List<Widget> tabs = [
-    HomeTab(),
-    History_Tab(),
-    centers_tab(),
-    ProfileTab(),
-  ];
 }
