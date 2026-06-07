@@ -21,10 +21,10 @@ class CenterModel {
 
   factory CenterModel.fromJson(Map<String, dynamic> json) {
     return CenterModel(
-      name   : json['name']    ?? json['centerName'] ?? 'Unknown',
-      address: json['address'] ?? json['location']   ?? '',
-      lat    : (json['latitude']  ?? json['lat'] ?? 0).toDouble(),
-      lng    : (json['longitude'] ?? json['lng'] ?? 0).toDouble(),
+      name: json['name'] ?? json['centerName'] ?? 'Unknown',
+      address: json['address'] ?? json['location'] ?? '',
+      lat: (json['latitude'] ?? json['lat'] ?? 0).toDouble(),
+      lng: (json['longitude'] ?? json['lng'] ?? 0).toDouble(),
     );
   }
 }
@@ -66,15 +66,21 @@ class _centers_tabState extends State<centers_tab> {
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         setState(() {
-          _centers  = data.map((e) => CenterModel.fromJson(e)).toList();
+          _centers = data.map((e) => CenterModel.fromJson(e)).toList();
           _isLoading = false;
         });
       } else {
-        setState(() { _error = "Failed to load centers"; _isLoading = false; });
+        setState(() {
+          _error = "Failed to load centers";
+          _isLoading = false;
+        });
       }
     } catch (e) {
       print("Centers ERROR: $e");
-      setState(() { _error = "Network error"; _isLoading = false; });
+      setState(() {
+        _error = "Network error";
+        _isLoading = false;
+      });
     }
   }
 
@@ -91,7 +97,8 @@ class _centers_tabState extends State<centers_tab> {
       }
 
       final pos = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.high,
+      );
 
       final uri = Uri.parse(
         'https://www.google.com/maps/dir/?api=1'
@@ -113,7 +120,9 @@ class _centers_tabState extends State<centers_tab> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator(color: Color(0xFF3B6DE3)));
+      return const Center(
+        child: CircularProgressIndicator(color: Color(0xFF3B6DE3)),
+      );
     }
 
     if (_error != null) {
@@ -126,10 +135,18 @@ class _centers_tabState extends State<centers_tab> {
             Text(_error!, style: const TextStyle(color: Colors.grey)),
             const SizedBox(height: 16),
             ElevatedButton.icon(
-              onPressed: () { setState(() { _isLoading = true; _error = null; }); _fetchCenters(); },
+              onPressed: () {
+                setState(() {
+                  _isLoading = true;
+                  _error = null;
+                });
+                _fetchCenters();
+              },
               icon: const Icon(Icons.refresh),
               label: const Text("Retry"),
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF3B6DE3)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF3B6DE3),
+              ),
             ),
           ],
         ),
@@ -138,7 +155,10 @@ class _centers_tabState extends State<centers_tab> {
 
     if (_centers.isEmpty) {
       return const Center(
-        child: Text("No repair centers found", style: TextStyle(color: Colors.grey)),
+        child: Text(
+          "No repair centers found",
+          style: TextStyle(color: Colors.grey),
+        ),
       );
     }
 
@@ -175,7 +195,11 @@ class _CenterCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
@@ -189,19 +213,33 @@ class _CenterCard extends StatelessWidget {
                   color: Colors.blue.shade50,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.build, color: Color(0xFF3B6DE3), size: 22),
+                child: const Icon(
+                  Icons.build,
+                  color: Color(0xFF3B6DE3),
+                  size: 22,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(center.name,
-                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                    Text(
+                      center.name,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     if (center.address.isNotEmpty) ...[
                       const SizedBox(height: 3),
-                      Text(center.address,
-                          style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                      Text(
+                        center.address,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
                     ],
                   ],
                 ),
@@ -218,7 +256,9 @@ class _CenterCard extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF3B6DE3),
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),

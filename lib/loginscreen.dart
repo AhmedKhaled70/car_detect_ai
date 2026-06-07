@@ -2,7 +2,7 @@ import 'package:car_damage_detection/home_screen.dart';
 import 'package:car_damage_detection/register_screen.dart';
 import 'package:car_damage_detection/controller/forgetscreen_controller.dart';
 import 'package:car_damage_detection/forget_screen.dart';
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'controller/LoginController.dart';
@@ -26,7 +26,6 @@ class _LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final controller = context.watch<LoginController>();
 
     return Scaffold(
@@ -37,7 +36,6 @@ class _LoginView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-
                 const SizedBox(height: 20),
 
                 Container(
@@ -56,10 +54,7 @@ class _LoginView extends StatelessWidget {
 
                 const Text(
                   'Car Detect AI',
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
 
                 const Text(
@@ -123,14 +118,15 @@ class _LoginView extends StatelessWidget {
                     onPressed: controller.isLoading
                         ? null
                         : () async {
-                      bool success =
-                      await controller.loginUser();
+                            bool success = await controller.loginUser();
 
-                      if (success) {
-                        Navigator.pushReplacementNamed(
-                            context, homescreen.RouteName);
-                      }
-                    },
+                            if (success) {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                homescreen.RouteName,
+                              );
+                            }
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF5B6CFF),
                       shape: RoundedRectangleBorder(
@@ -138,15 +134,11 @@ class _LoginView extends StatelessWidget {
                       ),
                     ),
                     child: controller.isLoading
-                        ? const CircularProgressIndicator(
-                        color: Colors.white)
+                        ? const CircularProgressIndicator(color: Colors.white)
                         : const Text(
-                      'Login',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                    ),
+                            'Login',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
                   ),
                 ),
 
@@ -202,13 +194,9 @@ Widget _buildTextField({
       errorText: errorText,
       suffixIcon: isPassword
           ? IconButton(
-        icon: Icon(
-          isHidden
-              ? Icons.visibility_off
-              : Icons.visibility,
-        ),
-        onPressed: onToggle,
-      )
+              icon: Icon(isHidden ? Icons.visibility_off : Icons.visibility),
+              onPressed: onToggle,
+            )
           : null,
       filled: true,
       fillColor: Colors.grey.shade100,

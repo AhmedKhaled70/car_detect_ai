@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../api config.dart';
 
 class LoginController extends ChangeNotifier {
-
   /// 🔹 Controllers
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -90,7 +89,6 @@ class LoginController extends ChangeNotifier {
       /// 🔥 Save profile image (من غير ما تمسح القديمة)
       if (data["profileImage"] != null &&
           data["profileImage"].toString().isNotEmpty) {
-
         await prefs.setString("profileImage", data["profileImage"]);
         print("🖼 SAVED IMAGE: ${data["profileImage"]}");
       } else {
@@ -100,7 +98,6 @@ class LoginController extends ChangeNotifier {
       print("🔥 TOKEN SAVED");
 
       return true;
-
     } catch (e) {
       print("❌ EXCEPTION: $e");
       return false;
@@ -116,9 +113,7 @@ class LoginController extends ChangeNotifier {
       final response = await http.post(
         Uri.parse("$baseUrl/ForgotPassword"),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": emailController.text.trim(),
-        }),
+        body: jsonEncode({"email": emailController.text.trim()}),
       );
 
       final data = jsonDecode(response.body);

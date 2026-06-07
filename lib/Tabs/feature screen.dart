@@ -8,54 +8,50 @@ class FeaturesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
-      appBar: AppBar(
-        title: const Text("About App"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("About App"), centerTitle: true),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: const [
-
           _FeatureCard(
             icon: Icons.psychology,
             title: "AI Damage Detection",
             description:
-            "The system uses artificial intelligence to detect car damage from uploaded images and classify severity into Minor, Moderate, or Severe.",
+                "The system uses artificial intelligence to detect car damage from uploaded images and classify severity into Minor, Moderate, or Severe.",
           ),
 
           _FeatureCard(
             icon: Icons.camera_alt,
             title: "Real-Time Scanning",
             description:
-            "Users can scan vehicles in real-time using the camera for instant AI-powered damage analysis.",
+                "Users can scan vehicles in real-time using the camera for instant AI-powered damage analysis.",
           ),
 
           _FeatureCard(
             icon: Icons.photo_library,
             title: "Upload From Gallery",
             description:
-            "Upload car images directly from your phone gallery for damage detection.",
+                "Upload car images directly from your phone gallery for damage detection.",
           ),
 
           _FeatureCard(
             icon: Icons.attach_money,
             title: "Cost Estimation",
             description:
-            "Based on the detected damage, the system provides an estimated repair cost.",
+                "Based on the detected damage, the system provides an estimated repair cost.",
           ),
 
           _FeatureCard(
             icon: Icons.history,
             title: "Scan History",
             description:
-            "View and manage previous scan results with detailed reports and analysis.",
+                "View and manage previous scan results with detailed reports and analysis.",
           ),
 
           _FeatureCard(
             icon: Icons.security,
             title: "Secure Authentication",
             description:
-            "Login and register securely using Firebase Authentication for user data protection.",
+                "Login and register securely using Firebase Authentication for user data protection.",
           ),
         ],
       ),
@@ -87,13 +83,12 @@ class _FeatureCard extends StatelessWidget {
             color: Colors.grey.withOpacity(0.08),
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           /// Icon Box
           Container(
             padding: const EdgeInsets.all(12),
@@ -121,10 +116,7 @@ class _FeatureCard extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   description,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    height: 1.4,
-                  ),
+                  style: const TextStyle(color: Colors.grey, height: 1.4),
                 ),
               ],
             ),

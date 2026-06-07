@@ -19,10 +19,7 @@ class _homescreenState extends State<homescreen> {
   int selectedIndex = 0;
   final ImagePicker _picker = ImagePicker();
 
-  List<Widget> tabs = [
-    const HomeTab(),
-    const HistoryTab(),
-  ];
+  List<Widget> tabs = [const HomeTab(), const HistoryTab()];
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +32,7 @@ class _homescreenState extends State<homescreen> {
         elevation: 0,
         title: const Text(
           "Car Detect AI",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
 
         /// 🔥 Profile Image
@@ -46,7 +40,6 @@ class _homescreenState extends State<homescreen> {
           FutureBuilder(
             future: UserController().getCurrentUser(),
             builder: (context, snapshot) {
-
               if (!snapshot.hasData) {
                 return const Padding(
                   padding: EdgeInsets.only(right: 12),
@@ -63,9 +56,7 @@ class _homescreenState extends State<homescreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const ProfileTab(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const ProfileTab()),
                     );
                   },
                   child: CircleAvatar(
@@ -94,10 +85,7 @@ class _homescreenState extends State<homescreen> {
               begin: const Offset(0.2, 0),
               end: Offset.zero,
             ).animate(animation),
-            child: FadeTransition(
-              opacity: animation,
-              child: child,
-            ),
+            child: FadeTransition(opacity: animation, child: child),
           );
         },
         child: tabs[selectedIndex],
@@ -118,7 +106,6 @@ class _homescreenState extends State<homescreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-
               /// 🔥 الشمال
               Padding(
                 padding: const EdgeInsets.only(left: 25),
@@ -199,7 +186,6 @@ class _homescreenState extends State<homescreen> {
     );
   }
 
-
   /// 🔥 Bottom Item
   Widget _buildItem(IconData icon, String label, int index) {
     final isSelected = selectedIndex == index;
@@ -213,10 +199,7 @@ class _homescreenState extends State<homescreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            color: isSelected ? const Color(0xFF3B6DE3) : Colors.grey,
-          ),
+          Icon(icon, color: isSelected ? const Color(0xFF3B6DE3) : Colors.grey),
           Text(
             label,
             style: TextStyle(

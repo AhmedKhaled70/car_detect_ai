@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import '../api config.dart';
 
 class ResetPasswordController extends ChangeNotifier {
-
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
@@ -18,7 +17,6 @@ class ResetPasswordController extends ChangeNotifier {
     required String email,
     required String token,
   }) async {
-
     if (passwordController.text.isEmpty) {
       passwordError = "Required";
       notifyListeners();
@@ -37,9 +35,7 @@ class ResetPasswordController extends ChangeNotifier {
 
       final response = await http.post(
         Uri.parse("$baseUrl/ResetPassword"),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": email,
           "token": token,
@@ -50,7 +46,6 @@ class ResetPasswordController extends ChangeNotifier {
       print(response.body);
 
       return response.statusCode == 200;
-
     } catch (e) {
       print(e);
       return false;
